@@ -16,5 +16,11 @@ pipeline {
             }
         }
 
+        stage('Run Python File') {
+            steps {
+                sh 'python3 addition.py'
+            }
+        }
+
     }
 }
