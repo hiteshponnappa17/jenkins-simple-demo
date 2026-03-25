@@ -16,19 +16,17 @@ pipeline {
 
         stage('Docker Build') {
             steps {
-                script {
-                    docker.build("hiteshponnappa77/myapp:${env.BUILD_NUMBER}")
-                }
+                sh "docker build -t hiteshponnappa77/myapp:${env.BUILD_NUMBER} ."
             }
         }
 
         stage('Docker Push') {
             steps {
-                script {
-                    docker.withRegistry('https://registry.hub.docker.com', 'docker-hub-credentials') {
-                        docker.image("hiteshponnappa77/myapp:${env.BUILD_NUMBER}").push()
-                        docker.image("hiteshponnappa77/myapp:${env.BUILD_NUMBER}").push("latest")
-                    }
+                withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                    sh "echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin"
+                    sh "docker push hiteshponnappa77/myapp:${env.BUILD_NUMBER}"
+                    sh "docker tag hiteshponnappa77/myapp:${env.BUILD_NUMBER} hiteshponnappa77/myapp:latest"
+                    sh "docker push hiteshponnappa77/myapp:latest"
                 }
             }
         }
