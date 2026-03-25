@@ -1,5 +1,4 @@
-FROM openjdk:17-jdk-slim
+FROM python:3.10-slim
 WORKDIR /app
-COPY . /app
-RUN javac Main.java
-CMD ["java", "Main"]
+COPY addition.py /app
+CMD ["python3", "addition.py"]
