@@ -10,7 +10,7 @@ pipeline {
 
         stage('Build') {
             steps {
-                sh 'javac Main.java'   // compile your Java file(s)
+                sh 'python3 addition.py'
             }
         }
 
