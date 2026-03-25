@@ -17,15 +17,18 @@ pipeline {
         stage('Docker Build') {
             steps {
                 script {
-                    docker.build("myapp:${env.BUILD_NUMBER}")
+                    docker.build("hiteshponnappa77/myapp:${env.BUILD_NUMBER}")
                 }
             }
         }
 
-        stage('Docker Run') {
+        stage('Docker Push') {
             steps {
                 script {
-                    docker.image("myapp:${env.BUILD_NUMBER}").run('-d -p 8080:8080')
+                    docker.withRegistry('https://registry.hub.docker.com', 'docker-hub-credentials') {
+                        docker.image("hiteshponnappa77/myapp:${env.BUILD_NUMBER}").push()
+                        docker.image("hiteshponnappa77/myapp:${env.BUILD_NUMBER}").push("latest")
+                    }
                 }
             }
         }
