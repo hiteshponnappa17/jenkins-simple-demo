@@ -2,25 +2,32 @@ pipeline {
     agent any
 
     stages {
-
-        stage('Clone') {
+        stage('Checkout') {
             steps {
-                git url: 'https://github.com/hiteshponnappa17/jenkins-simple-demo.git', branch: 'main'
+                git branch: 'main', url: 'https://github.com/<your-username>/<your-repo>.git'
             }
         }
 
-        stage('Run Script') {
+        stage('Build') {
             steps {
-                sh 'chmod +x script.sh'
-                sh './script.sh'
+                sh 'mvn clean package'   // or your build tool
             }
         }
 
-        stage('Run Python File') {
+        stage('Docker Build') {
             steps {
-                sh 'python3 addition.py'
+                script {
+                    docker.build("myapp:${env.BUILD_NUMBER}")
+                }
             }
         }
 
+        stage('Docker Run') {
+            steps {
+                script {
+                    docker.image("myapp:${env.BUILD_NUMBER}").run('-d -p 8080:8080')
+                }
+            }
+        }
     }
 }
