@@ -10,7 +10,7 @@ pipeline {
 
         stage('Build') {
             steps {
-                sh 'mvn clean package'   // or your build tool
+                sh 'javac Main.java'   // compile your Java file(s)
             }
         }
 
